@@ -5,6 +5,9 @@ def call(Map config = [:]) {
         yaml """
 apiVersion: v1
 kind: Pod
+metadata:
+  labels:
+    some-label: jenkins-agent
 spec:
   containers:
     - name: docker
@@ -15,11 +18,15 @@ spec:
       volumeMounts:
         - name: docker-sock
           mountPath: /var/run/docker.sock
+    - name: jnlp
+      image: jenkins/inbound-agent:3107.v665000b_51092-15
+      args: ['\$(JENKINS_SECRET)', '\$(JENKINS_NAME)']
   volumes:
     - name: docker-sock
       hostPath:
         path: /var/run/docker.sock
 """
+
       }
     }
 
